@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#6d28d9">
+<title>Campusly — Your campus. Your people. Your space.</title>
+<style>
+:root{
+  --purple:#6d28d9;--purple-dark:#4c1d95;--violet:#8b5cf6;--lilac:#ede9fe;
+  --ink:#201a2e;--muted:#777286;--line:#eeeaf5;--paper:#fff;--bg:#f8f7fc;
+  --green:#16845b;--shadow:0 10px 35px rgba(42,23,80,.07)
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.topbar{height:72px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;position:sticky;top:0;z-index:10}
+.top-inner{width:min(1200px,94%);margin:auto;display:flex;align-items:center;gap:26px}
+.logo{display:flex;align-items:center;gap:10px;font-size:23px;font-weight:850;letter-spacing:-1px;white-space:nowrap}
+.logo-mark{width:37px;height:37px;border-radius:13px;background:linear-gradient(135deg,#6d28d9,#a78bfa);display:grid;place-items:center;color:white;font-size:20px;box-shadow:0 6px 14px #6d28d933}
+.logo span{color:var(--purple)}
+.search{flex:1;max-width:470px;position:relative}
+.search input{width:100%;border:1px solid var(--line);background:#faf9fd;border-radius:14px;padding:12px 16px 12px 42px;outline:none}
+.search input:focus{border-color:#c4b5fd;box-shadow:0 0 0 3px #ede9fe}
+.search:before{content:"⌕";position:absolute;left:15px;top:5px;font-size:25px;color:#8b8499}
+.top-actions{margin-left:auto;display:flex;align-items:center;gap:12px}
+.icon-btn{width:40px;height:40px;border:1px solid var(--line);border-radius:13px;background:#fff;color:#665d78;font-size:18px}
+.avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#ede9fe;color:#5b21b6;font-weight:800}
+.layout{width:min(1200px,94%);margin:26px auto 50px;display:grid;grid-template-columns:220px minmax(0,1fr) 250px;gap:24px;align-items:start}
+.card{background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
+.left-nav{padding:17px;position:sticky;top:94px}
+.school-chip{background:linear-gradient(135deg,#f3e8ff,#f5f3ff);border-radius:15px;padding:14px;margin-bottom:19px}
+.school-chip small{color:#75658d;display:block;font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px}
+.school-chip strong{font-size:14px;line-height:1.35}
+.nav-label{font-size:10px;font-weight:850;color:#a09aaf;letter-spacing:1.4px;margin:18px 9px 8px}
+.nav-item{display:flex;align-items:center;gap:12px;width:100%;border:0;background:transparent;text-align:left;color:#625b71;padding:12px 10px;border-radius:12px;font-size:14px;font-weight:650;margin:2px 0}
+.nav-item .ico{width:23px;text-align:center;font-size:17px}
+.nav-item.active{background:#f1eaff;color:var(--purple)}
+.nav-item:hover{background:#f8f5ff}
+.left-note{font-size:11px;color:#9a94a8;line-height:1.5;margin:22px 8px 4px}
+main{min-width:0}
+.welcome{background:linear-gradient(115deg,#4c1d95 0%,#6d28d9 55%,#9f67f6 100%);border-radius:22px;padding:24px 25px;color:white;position:relative;overflow:hidden;margin-bottom:18px}
+.welcome:after{content:"✦";position:absolute;right:28px;top:-30px;font-size:145px;color:#ffffff17;transform:rotate(15deg)}
+.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#e9ddff;font-weight:800}
+.welcome h1{margin:9px 0 7px;font-size:29px;letter-spacing:-1.2px;line-height:1.15}
+.welcome p{margin:0;color:#eee5ff;font-size:13px;max-width:430px;line-height:1.55}
+.welcome-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:17px}
+.welcome-tags span{font-size:11px;background:#ffffff20;border:1px solid #ffffff2b;padding:7px 10px;border-radius:30px}
+.composer{padding:16px;margin-bottom:17px}
+.composer-top{display:flex;align-items:center;gap:11px}
+.composer-trigger{flex:1;text-align:left;border:1px solid var(--line);border-radius:13px;padding:12px 14px;background:#faf9fd;color:#8b8499;font-size:13px}
+.composer-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
+.soft-btn{border:0;background:#f6f2ff;color:#6741a5;padding:9px 12px;border-radius:10px;font-size:12px;font-weight:750}
+.primary-btn{border:0;background:var(--purple);color:white;border-radius:11px;padding:10px 15px;font-weight:750;font-size:12px}
+.primary-btn:hover{background:var(--purple-dark)}
+.feed-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:22px 2px 13px}
+.feed-head h2{font-size:18px;letter-spacing:-.4px;margin:0}
+.feed-head select{border:1px solid var(--line);border-radius:10px;padding:8px;background:#fff;color:#655c75;font-size:12px;outline:none}
+.filters{display:flex;gap:8px;overflow-x:auto;padding:1px 0 13px;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.filter{white-space:nowrap;border:1px solid var(--line);border-radius:30px;background:#fff;color:#70687e;padding:9px 13px;font-size:12px;font-weight:750}
+.filter.active{background:var(--purple);border-color:var(--purple);color:white}
+.post{padding:17px 18px;margin-bottom:13px}
+.post-top{display:flex;align-items:center;gap:10px}
+.post-avatar{width:41px;height:41px;border-radius:15px;display:grid;place-items:center;font-weight:850;font-size:14px;flex-shrink:0}
+.purple{background:#ede9fe;color:#6d28d9}.peach{background:#ffedd5;color:#c2410c}.mint{background:#d1fae5;color:#047857}.blue{background:#dbeafe;color:#1d4ed8}.pink{background:#fce7f3;color:#be185d}
+.author{font-size:13px;font-weight:800}
+.meta{font-size:11px;color:#9891a6;margin-top:3px}
+.badge{margin-left:auto;background:#f4efff;color:#6d28d9;border-radius:7px;padding:5px 7px;font-size:9px;font-weight:850;text-transform:uppercase;letter-spacing:.5px}
+.post h3{font-size:15px;line-height:1.45;margin:15px 0 7px;letter-spacing:-.2px}
+.post p{font-size:13px;color:#655e73;line-height:1.65;margin:0 0 13px;white-space:pre-wrap;overflow-wrap:anywhere}
+.post-footer{border-top:1px solid #f2eff7;padding-top:11px;display:flex;gap:7px;align-items:center}
+.action{border:0;background:transparent;color:#827b90;padding:7px 9px;border-radius:9px;font-size:12px;font-weight:700}
+.action:hover{background:#f8f5ff}
+.action.liked{color:#6d28d9;background:#f1eaff}
+.post-count{margin-left:auto;color:#a19aac;font-size:11px}
+.comments{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.comments.open{display:block}
+.comment-list{font-size:12px;color:#6e667e;line-height:1.6;margin-bottom:10px}
+.comment-form{display:flex;gap:8px}
+.comment-form input{flex:1;min-width:0;border:1px solid var(--line);border-radius:10px;padding:10px;font-size:12px;outline:none}
+.comment-form button{border:0;border-radius:10px;background:#f1eaff;color:#6d28d9;padding:0 12px;font-weight:800}
+.right-card{padding:17px;margin-bottom:15px}
+.right-title{font-size:14px;font-weight:850;margin:0 0 15px}
+.trend{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #f3f0f7}
+.trend:last-child{border-bottom:0;padding-bottom:0}
+.trend-icon{width:33px;height:33px;border-radius:11px;background:#f3e8ff;display:grid;place-items:center;flex-shrink:0}
+.trend strong{font-size:12px;display:block;margin:2px 0 4px}
+.trend small{font-size:10px;color:#a19aac}
+.community{display:flex;align-items:center;gap:10px;margin:12px 0}
+.community-icon{width:35px;height:35px;display:grid;place-items:center;border-radius:12px;background:#f5f3ff}
+.community strong{font-size:12px;display:block}
+.community small{font-size:10px;color:#a19aac}
+.join{margin-left:auto;border:1px solid #e9ddff;color:#6d28d9;background:white;border-radius:8px;padding:5px 8px;font-size:10px;font-weight:800}
+.tip{background:#f4efff;border:1px solid #e9ddff;border-radius:14px;padding:13px;font-size:11px;color:#6f5b91;line-height:1.6}
+.footer-note{font-size:10px;color:#a19aac;line-height:1.6;margin:12px 3px}
+.empty{padding:32px;text-align:center;color:#91899f;font-size:13px}
+.modal-backdrop{position:fixed;inset:0;background:#21152f80;z-index:30;display:none;align-items:center;justify-content:center;padding:18px}
+.modal-backdrop.show{display:flex}
+.modal{width:min(520px,100%);background:#fff;border-radius:22px;padding:22px;box-shadow:0 24px 80px #21152f40}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.modal-head h2{font-size:20px;margin:0}
+.close{border:0;background:#f5f2fa;border-radius:10px;width:34px;height:34px;font-size:18px;color:#6e667e}
+.field{display:block;margin:13px 0}
+.field label{display:block;font-size:12px;font-weight:800;margin-bottom:7px}
+.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;outline:none;background:#fff}
+.field textarea{resize:vertical;min-height:115px}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:#c4b5fd;box-shadow:0 0 0 3px #ede9fe}
+.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}
+.cancel{border:1px solid var(--line);background:#fff;border-radius:11px;padding:10px 14px;color:#71697f;font-weight:750;font-size:12px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:#24153c;color:#fff;padding:12px 17px;border-radius:12px;font-size:12px;opacity:0;pointer-events:none;transition:.25s;z-index:50;box-shadow:var(--shadow);max-width:90%;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.mobile-nav{display:none}
+@media(max-width:1020px){.layout{grid-template-columns:190px minmax(0,1fr);gap:17px}.right-col{display:none}.top-inner{gap:16px}}
+@media(max-width:700px){
+ .topbar{height:62px}.top-inner{width:92%;gap:10px}.logo{font-size:20px}.logo-mark{width:33px;height:33px;border-radius:11px}.search{display:none}.top-actions{gap:7px}.top-actions .icon-btn{width:35px;height:35px}.layout{display:block;width:92%;margin:17px auto 90px}.left-col{display:none}.welcome{padding:22px 20px;border-radius:19px}.welcome h1{font-size:26px}.welcome:after{right:9px;font-size:105px}.composer{padding:13px;border-radius:17px}.post{padding:15px;border-radius:17px}.feed-head{margin-top:19px}.feed-head h2{font-size:17px}.post h3{font-size:14px}.mobile-nav{position:fixed;bottom:0;left:0;right:0;z-index:15;display:flex;justify-content:space-around;align-items:center;background:#fff;border-top:1px solid var(--line);padding:9px 5px calc(9px + env(safe-area-inset-bottom))}.mobile-nav button{border:0;background:transparent;color:#837b93;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:54px}.mobile-nav button span{font-size:19px}.mobile-nav button.active{color:var(--purple);font-weight:850}.composer-actions .soft-btn{padding:8px 9px}.badge{font-size:8px}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="top-inner">
+    <div class="logo"><div class="logo-mark">✳</div>campus<span>ly</span></div>
+    <div class="search"><input id="searchInput" type="search" placeholder="Search campus conversations..." aria-label="Search posts"></div>
+    <div class="top-actions"><button class="icon-btn" id="searchToggle" title="Search">⌕</button><button class="icon-btn" id="notifyBtn" title="Notifications">♧</button><div class="avatar" title="Demo profile">Z</div></div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="left-col">
+    <nav class="card left-nav">
+      <div class="school-chip"><small>YOUR CAMPUS</small><strong>Ahmadu Bello University<br>Zaria, Kaduna</strong></div>
+      <div class="nav-label">YOUR SPACE</div>
+      <button class="nav-item active" data-nav="For You"><span class="ico">⌂</span>For You</button>
+      <button class="nav-item" data-nav="Trending"><span class="ico">↗</span>Trending</button>
+      <button class="nav-item" data-nav="Communities"><span class="ico">◉</span>Communities</button>
+      <button class="nav-item" data-nav="Spotted"><span class="ico">♡</span>Spotted 👀</button>
+      <button class="nav-item" data-nav="Confessions"><span class="ico">☁</span>Confessions</button>
+      <button class="nav-item" data-nav="Marketplace"><span class="ico">▣</span>Marketplace</button>
+      <div class="nav-label">CAMPUS LIFE</div>
+      <button class="nav-item" data-nav="Academics"><span class="ico">▤</span>Academics</button>
+      <button class="nav-item" data-nav="Events"><span class="ico">✦</span>Events & updates</button>
+      <div class="left-note">A concept prototype for campus community. Sample posts are fictional.</div>
+    </nav>
+  </aside>
+
+  <main>
+    <section class="welcome">
+      <div class="eyebrow">YOUR CAMPUS, REIMAGINED ✨</div>
+      <h1>Hey, ABUsite! 👋🏽</h1>
+      <p>Your campus. Your people. Your space. Find your community, share your story, and see what's happening around you.</p>
+      <div class="welcome-tags"><span>💬 Real conversations</span><span>🎓 Student community</span><span>💜 Made for campus</span></div>
+    </section>
+
+    <section class="card composer">
+      <div class="composer-top"><div class="avatar">Z</div><button class="composer-trigger" id="openComposer">What's happening, ABUsite?</button></div>
+      <div class="composer-actions">
+        <button class="soft-btn" data-compose-category="Campus Life">💬 Start a conversation</button>
+        <button class="soft-btn" data-compose-category="Confessions">🤫 Confess anonymously</button>
+        <button class="soft-btn" data-compose-category="Marketplace">🛍️ Share a listing</button>
+      </div>
+    </section>
+
+    <div class="feed-head"><h2 id="feedTitle">Campus conversations</h2><select id="sortSelect" aria-label="Sort posts"><option value="new">Most recent</option><option value="popular">Most liked</option></select></div>
+    <div class="filters" id="filters">
+      <button class="filter active" data-filter="All">For You</button>
+      <button class="filter" data-filter="Campus Life">Campus life</button>
+      <button class="filter" data-filter="Spotted">Spotted 👀</button>
+      <button class="filter" data-filter="Confessions">Confessions 🤫</button>
+      <button class="filter" data-filter="Academics">Academics 📚</button>
+      <button class="filter" data-filter="Marketplace">Marketplace 🛍️</button>
+      <button class="filter" data-filter="Events">Events ✨</button>
+    </div>
+    <div id="feed"></div>
+  </main>
+
+  <aside class="right-col">
+    <section class="card right-card">
+      <h3 class="right-title">🔥 Campus buzz</h3>
+      <div class="trend"><div class="trend-icon">📚</div><div><strong>#StudyBuddySearch</strong><small>Academic community · demo</small></div></div>
+      <div class="trend"><div class="trend-icon">👀</div><div><strong>#SpottedOnCampus</strong><small>Campus life · demo</small></div></div>
+      <div class="trend"><div class="trend-icon">🎉</div><div><strong>#WeekendPlans</strong><small>Events · demo</small></div></div>
+    </section>
+    <section class="card right-card">
+      <h3 class="right-title">Find your people</h3>
+      <div class="community"><div class="community-icon">📖</div><div><strong>Study Circle</strong><small>Learning together</small></div><button class="join" data-join="Study Circle">Join</button></div>
+      <div class="community"><div class="community-icon">💼</div><div><strong>Young Entrepreneurs</strong><small>Ideas & opportunities</small></div><button class="join" data-join="Young Entrepreneurs">Join</button></div>
+      <div class="community"><div class="community-icon">✨</div><div><strong>Campus Creatives</strong><small>Style, art & content</small></div><button class="join" data-join="Campus Creatives">Join</button></div>
+    </section>
+    <section class="tip"><strong>💜 Keep Campusly kind.</strong><br>Connect with respect. Don't share private information or post content intended to harass or expose someone.</section>
+    <div class="footer-note">Campusly is a concept prototype, not an official ABU service. This demo does not have real accounts, server storage, or live student posts.</div>
+  </aside>
+</div>
+
+<nav class="mobile-nav">
+  <button class="active" data-nav="For You"><span>⌂</span>Home</button>
+  <button data-nav="Trending"><span>↗</span>Trending</button>
+  <button id="mobileCreate"><span style="background:#6d28d9;color:white;border-radius:12px;padding:2px 10px">＋</span>Create</button>
+  <button data-nav="Communities"><span>◉</span>Groups</button>
+  <button data-nav="Profile"><span>☺</span>Profile</button>
+</nav>
+
+<div class="modal-backdrop" id="postModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <div class="modal-head"><h2 id="modalTitle">Create a post</h2><button class="close" id="closeModal" aria-label="Close">×</button></div>
+    <div class="field"><label for="postCategory">Category</label><select id="postCategory"><option>Campus Life</option><option>Spotted</option><option>Confessions</option><option>Academics</option><option>Marketplace</option><option>Events</option></select></div>
+    <div class="field"><label for="postTitle">Headline (optional)</label><input id="postTitle" maxlength="100" placeholder="Give your post a title"></div>
+    <div class="field"><label for="postBody">What's on your mind, ABUsite?</label><textarea id="postBody" maxlength="1000" placeholder="Share something useful, funny, or interesting…"></textarea></div>
+    <div class="field" id="anonField" style="display:none"><label><input type="checkbox" id="anonymous" style="width:auto;margin-right:7px">Post with an anonymous display name</label><small style="display:block;color:#91899f;margin-top:6px">Demo only: this changes the public label, not true technical anonymity.</small></div>
+    <div class="modal-actions"><button class="cancel" id="cancelPost">Cancel</button><button class="primary-btn" id="publishPost">Publish post</button></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const initialPosts = [
+ {id:1,author:"Campus Conversations",initials:"CC",tone:"purple",time:"12 min ago",category:"Campus Life",title:"What's one thing you wish you knew before coming to ABU? 👀",body:"Let's help the freshers out! Drop the advice you wish someone had given you in your first week on campus. Keep it kind and useful 💜",likes:42,comments:["Bring a little patience and ask questions when you need help.","Make friends outside your department too!"],liked:false},
+ {id:2,author:"A fellow student",initials:"AS",tone:"peach",time:"28 min ago",category:"Spotted",title:"A little campus appreciation post 🌷",body:"To the person who helped someone pick up their books today without making a big deal out of it: small kindnesses matter. Hope good things find you!",likes:27,comments:["We need more of this energy 🥹"],liked:false},
+ {id:3,author:"Study Corner",initials:"SC",tone:"mint",time:"46 min ago",category:"Academics",title:"Looking for study partners 📚",body:"Anyone interested in forming a small study group this week? We can share revision tips, quiz one another, and keep each other motivated. Comment with your subject area if you're interested.",likes:19,comments:["I'd be interested!","A study group before exams is such a good idea."],liked:false},
+ {id:4,author:"Anonymous",initials:"?",tone:"pink",time:"1 hr ago",category:"Confessions",title:"A gentle reminder 🤍",body:"Sometimes it feels like everybody else has everything figured out. If you're just taking things one day at a time, you're not behind. Be gentle with yourself.",likes:61,comments:["Needed to hear this today.","One day at a time 💗"],liked:false,anonymous:true},
+ {id:5,author:"Student Marketplace",initials:"SM",tone:"blue",time:"2 hrs ago",category:"Marketplace",title:"What would you love to buy or find on campus? 🛍️",body:"We're imagining a student marketplace. What would make it useful for you: textbooks, food, thrift fashion, beauty services, tutoring, or something else?",likes:15,comments:["Second-hand textbooks, definitely!","Affordable food recommendations please 😭"],liked:false},
+ {id:6,author:"Campus Events",initials:"CE",tone:"peach",time:"3 hrs ago",category:"Events",title:"What kind of campus events would you attend? ✨",body:"Creative meetups, games, career talks, sip-and-paint, entrepreneurship sessions, or open-mic nights? Tell us what you'd actually show up for.",likes:23,comments:["Career and networking events!","Open mic would be fun."],liked:false}
+];
+let posts = initialPosts.map(p=>({...p,comments:[...p.comments]}));
+let activeFilter="All", activeNav="For You", searchTerm="";
+const feed=document.getElementById("feed");
+const modal=document.getElementById("postModal");
+const toast=document.getElementById("toast");
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function showToast(message){toast.textContent=message;toast.classList.add("show");clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>toast.classList.remove("show"),2600);}
+function categoryEmoji(c){return ({ "Campus Life":"💬","Spotted":"👀","Confessions":"🤫","Academics":"📚","Marketplace":"🛍️","Events":"✨"})[c]||"💬";}
+function render(){
+ let list=posts.filter(p=>{
+  const catOK=activeFilter==="All"||p.category===activeFilter;
+  const navOK=activeNav==="Trending"?p.likes>=20:activeNav==="Spotted"?p.category==="Spotted":activeNav==="Confessions"?p.category==="Confessions":activeNav==="Marketplace"?p.category==="Marketplace":activeNav==="Academics"?p.category==="Academics":activeNav==="Events"?p.category==="Events":true;
+  const hay=(p.author+" "+p.title+" "+p.body+" "+p.category).toLowerCase();
+  return catOK&&navOK&&hay.includes(searchTerm.toLowerCase());
+ });
+ if(document.getElementById("sortSelect").value==="popular")list.sort((a,b)=>b.likes-a.likes);
+ document.getElementById("feedTitle").textContent=activeNav==="For You"?"Campus conversations":activeNav==="Trending"?"Trending conversations":activeNav==="Communities"?"Community conversations":activeNav==="Profile"?"Your demo profile":activeNav==="Spotted"?"Spotted on campus":activeNav==="Confessions"?"The anonymous corner":activeNav==="Marketplace"?"Student marketplace":activeNav==="Academics"?"Academic conversations":activeNav==="Events"?"Events & updates":activeNav;
+ if(!list.length){feed.innerHTML='<div class="card empty">No posts match that yet. Try another category or search. 💜</div>';return}
+ feed.innerHTML=list.map(p=>`
+ <article class="card post" data-post="${p.id}">
+  <div class="post-top"><div class="post-avatar ${p.tone}">${escapeHTML(p.anonymous?"?":p.initials)}</div><div><div class="author">${escapeHTML(p.anonymous?"Anonymous":p.author)}</div><div class="meta">${escapeHTML(p.time)} · ${escapeHTML(p.category)}</div></div><span class="badge">${categoryEmoji(p.category)} ${escapeHTML(p.category)}</span></div>
+  <h3>${escapeHTML(p.title||"Campus post")}</h3><p>${escapeHTML(p.body)}</p>
+  <div class="post-footer"><button class="action ${p.liked?"liked":""}" data-like="${p.id}">${p.liked?"♥":"♡"} ${p.likes} likes</button><button class="action" data-comments="${p.id}">▢ ${p.comments.length} comments</button><button class="action" data-share="${p.id}">↗ Share</button><span class="post-count">Campusly demo</span></div>
+  <div class="comments ${p.commentsOpen?"open":""}" id="comments-${p.id}"><div class="comment-list">${p.comments.length?p.comments.map(c=>`<div>💬 ${escapeHTML(c)}</div>`).join(""):"No comments yet. Start a kind conversation."}</div><form class="comment-form" data-comment-form="${p.id}"><input name="comment" maxlength="300" placeholder="Write a respectful comment…" aria-label="Write a comment"><button type="submit">Send</button></form></div>
+ </article>`).join("");
+}
+function openModal(category="Campus Life"){document.getElementById("postCategory").value=category;document.getElementById("postTitle").value="";document.getElementById("postBody").value="";document.getElementById("anonymous").checked=false;syncAnon();modal.classList.add("show");setTimeout(()=>document.getElementById("postBody").focus(),50)}
+function closeModal(){modal.classList.remove("show")}
+function syncAnon(){document.getElementById("anonField").style.display=document.getElementById("postCategory").value==="Confessions"?"block":"none"}
+document.getElementById("openComposer").addEventListener("click",()=>openModal());
+document.getElementById("mobileCreate").addEventListener("click",()=>openModal());
+document.querySelectorAll("[data-compose-category]").forEach(b=>b.addEventListener("click",()=>openModal(b.dataset.composeCategory)));
+document.getElementById("closeModal").addEventListener("click",closeModal);
+document.getElementById("cancelPost").addEventListener("click",closeModal);
+modal.addEventListener("click",e=>{if(e.target===modal)closeModal()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
+document.getElementById("postCategory").addEventListener("change",syncAnon);
+document.getElementById("publishPost").addEventListener("click",()=>{
+ const category=document.getElementById("postCategory").value;
+ const body=document.getElementById("postBody").value.trim();
+ const title=document.getElementById("postTitle").value.trim();
+ if(!body){showToast("Add a few words before publishing.");document.getElementById("postBody").focus();return}
+ const anonymous=category==="Confessions"&&document.getElementById("anonymous").checked;
+ posts.unshift({id:Date.now(),author:anonymous?"Anonymous":"You (demo)",initials:anonymous?"?":"Z",tone:anonymous?"pink":"purple",time:"just now",category,title,body,likes:0,comments:[],liked:false,anonymous});
+ activeFilter="All";activeNav="For You";searchTerm="";document.getElementById("searchInput").value="";
+ document.querySelectorAll(".filter").forEach(b=>b.classList.toggle("active",b.dataset.filter==="All"));
+ document.querySelectorAll(".nav-item").forEach(b=>b.classList.toggle("active",b.dataset.nav==="For You"));
+ closeModal();render();showToast("Post added to this demo. It isn't saved to a server.");
+});
+feed.addEventListener("click",e=>{
+ const like=e.target.closest("[data-like]");if(like){const p=posts.find(x=>x.id==like.dataset.like);if(p){p.likes+=p.liked?-1:1;p.liked=!p.liked;render()}return}
+ const comment=e.target.closest("[data-comments]");if(comment){const p=posts.find(x=>x.id==comment.dataset.comments);if(p){p.commentsOpen=!p.commentsOpen;render();if(p.commentsOpen)document.querySelector(`#comments-${p.id} input`)?.focus()}return}
+ const share=e.target.closest("[data-share]");if(share){const p=posts.find(x=>x.id==share.dataset.share);if(navigator.share){navigator.share({title:p.title||"Campusly post",text:p.body}).catch(()=>{})}else if(navigator.clipboard){navigator.clipboard.writeText((p.title?p.title+"\n":"")+p.body).then(()=>showToast("Post text copied.")).catch(()=>showToast("Sharing isn't available in this preview."))}else showToast("Sharing isn't available in this preview.");return}
+});
+feed.addEventListener("submit",e=>{
+ const form=e.target.closest("[data-comment-form]");if(!form)return;e.preventDefault();const input=form.elements.comment;const value=input.value.trim();if(!value)return;const p=posts.find(x=>x.id==form.dataset.commentForm);if(p){p.comments.push(value);p.commentsOpen=true;render();showToast("Comment added to this demo.")}});
+document.getElementById("filters").addEventListener("click",e=>{const b=e.target.closest("[data-filter]");if(!b)return;activeFilter=b.dataset.filter;activeNav="For You";document.querySelectorAll(".filter").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll(".nav-item").forEach(x=>x.classList.toggle("active",x.dataset.nav==="For You"));render()});
+document.querySelectorAll("[data-nav]").forEach(b=>b.addEventListener("click",()=>{activeNav=b.dataset.nav;activeFilter="All";document.querySelectorAll(".filter").forEach(x=>x.classList.toggle("active",x.dataset.filter==="All"));document.querySelectorAll("[data-nav]").forEach(x=>x.classList.toggle("active",x.dataset.nav===activeNav));render();if(window.innerWidth<700)window.scrollTo({top:0,behavior:"smooth"})}));
+document.getElementById("searchInput").addEventListener("input",e=>{searchTerm=e.target.value;render()});
+document.getElementById("searchToggle").addEventListener("click",()=>{const s=document.getElementById("searchInput");if(window.innerWidth<701){const q=prompt("Search campus conversations:");if(q!==null){searchTerm=q;s.value=q;render()}}else{s.focus()}});
+document.getElementById("sortSelect").addEventListener("change",render);
+document.getElementById("notifyBtn").addEventListener("click",()=>showToast("Notifications will be available when accounts are connected."));
+document.querySelectorAll("[data-join]").forEach(b=>b.addEventListener("click",()=>{b.textContent=b.textContent==="Join"?"Joined ✓":"Join";showToast(b.textContent==="Joined ✓"?"Joined in this demo.":"Left demo community.");}));
+render();
+</script>
+</body>
+</html>
