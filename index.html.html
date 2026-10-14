@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#174734">
+<title>Campusly — Hey, ABUsite!</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--green:#174734;--green2:#236348;--cream:#fbf7ed;--gold:#c8a75a;--ink:#202820;--muted:#737a72;--line:#e8e4d9;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{background:var(--green);color:white;padding:18px 16px;position:sticky;top:0;z-index:5;box-shadow:0 4px 16px #0d281b20}
+.head{max-width:920px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-weight:900;font-size:25px;letter-spacing:-.8px}.brand span{color:#e2c878}.tag{font-size:12px;color:#e7e8dc;margin-top:3px}.smallbtn,button{border:0;border-radius:12px;padding:11px 14px;font-weight:750;cursor:pointer;font-size:14px}.smallbtn{background:#ffffff1b;color:white;border:1px solid #ffffff35}
+main{max-width:920px;margin:22px auto;padding:0 14px 50px;display:grid;grid-template-columns:220px minmax(0,1fr);gap:18px}.card{background:white;border:1px solid var(--line);border-radius:18px;padding:17px;box-shadow:0 6px 22px #263c2b08}.side{height:max-content;position:sticky;top:95px}.hello{font-size:19px;font-weight:850;margin:0 0 6px}.muted{color:var(--muted);font-size:13px;line-height:1.5}.nav{display:grid;gap:7px;margin-top:18px}.nav button{background:transparent;text-align:left;color:#344239}.nav button.active,.nav button:hover{background:#edf4ed;color:var(--green)}.maincol{min-width:0}.hero{background:linear-gradient(125deg,#174734,#2b6b4b);color:white;border-radius:20px;padding:22px;margin-bottom:15px;position:relative;overflow:hidden}.hero:after{content:"✦";position:absolute;right:20px;top:6px;color:#dfc77e;font-size:64px;opacity:.7}.hero h1{font-size:27px;margin:0 0 7px;max-width:80%}.hero p{margin:0;color:#e6eee6;font-size:14px}.sectiontitle{font-size:18px;font-weight:850;margin:20px 2px 12px}.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.field,textarea,select{width:100%;padding:12px;border:1px solid #dedfd6;border-radius:11px;font:inherit;background:#fff;color:var(--ink);outline-color:var(--green2)}textarea{min-height:100px;resize:vertical}.primary{background:var(--green);color:white}.secondary{background:#edf3ec;color:var(--green)}.gold{background:#f6edcf;color:#65501c}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.formgrid .wide{grid-column:1/-1}.hidden{display:none!important}.status{padding:11px 13px;border-radius:11px;background:#edf4ed;color:var(--green);font-size:13px;margin:10px 0}.status.error{background:#fff0ed;color:#a13222}.post{margin-top:12px}.posttop{display:flex;justify-content:space-between;gap:10px;align-items:center}.avatar{width:37px;height:37px;border-radius:50%;background:#e8efe5;color:var(--green);display:grid;place-items:center;font-weight:900;flex-shrink:0}.who{display:flex;gap:10px;align-items:center;min-width:0}.who strong{display:block;font-size:14px}.category{font-size:11px;background:#f4efdf;color:#705d2c;padding:5px 8px;border-radius:30px;white-space:nowrap}.postcontent{white-space:pre-wrap;line-height:1.55;margin:14px 0;overflow-wrap:anywhere}.postactions{display:flex;gap:8px;border-top:1px solid var(--line);padding-top:10px}.postactions button{background:transparent;color:#5c665d;padding:7px 9px}.postactions button.liked{color:#b24b50}.commentbox{display:flex;gap:8px;margin-top:12px}.commentbox input{min-width:0;flex:1;padding:10px;border:1px solid var(--line);border-radius:10px}.comment{font-size:13px;padding:7px 0;border-bottom:1px solid #f0eee8}.empty{text-align:center;padding:28px 12px;color:var(--muted)}footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
+@media(max-width:680px){main{display:flex;flex-direction:column;margin-top:14px}.side{position:static}.nav{grid-template-columns:repeat(3,1fr)}.nav button{text-align:center;padding:10px 4px;font-size:12px}.formgrid{grid-template-columns:1fr}.formgrid .wide{grid-column:auto}.hero h1{font-size:24px}.head{align-items:flex-start}}
+</style>
+</head>
+<body>
+<header><div class="head"><div><div class="brand">campus<span>ly</span> ✦</div><div class="tag">Hey, ABUsite!</div></div><button id="authToggle" class="smallbtn">Log in / Sign up</button></div></header>
+<main>
+<aside class="card side">
+<p class="hello" id="welcome">Your campus, your people.</p>
+<p class="muted">A space to connect, share, discover and grow — open to everyone.</p>
+<div class="nav">
+<button class="active" data-category="All">🏡 Home</button><button data-category="Academics">📚 Academics</button><button data-category="Confessions">🤫 Confessions</button><button data-category="Spotted">👀 Spotted</button><button data-category="Marketplace">🛍 Marketplace</button><button data-category="Events">🎉 Events</button>
+</div>
+<div id="accountBox" class="status hidden"></div>
+<button id="logoutBtn" class="secondary hidden" style="width:100%;margin-top:10px">Log out</button>
+</aside>
+<section class="maincol">
+<div class="hero"><h1>Campus life is better together.</h1><p>Meet people. Share ideas. Find your community.</p></div>
+<div id="authPanel" class="card hidden">
+<h2 style="margin:0 0 6px">Join Campusly</h2><p class="muted">Create an account or log in. No matric number or school ID required.</p>
+<div class="formgrid" style="margin-top:14px">
+<input id="fullName" class="field" placeholder="Full name (for sign up)">
+<input id="username" class="field" placeholder="Username (optional)">
+<input id="email" class="field wide" type="email" autocomplete="email" placeholder="Email address">
+<input id="password" class="field wide" type="password" autocomplete="current-password" placeholder="Password (at least 6 characters)">
+<input id="institution" class="field" placeholder="Institution (optional)">
+<input id="faculty" class="field" placeholder="Faculty (optional)">
+<input id="department" class="field" placeholder="Department (optional)">
+<input id="level" class="field" placeholder="Level (optional, e.g. 200)">
+</div>
+<div class="row" style="margin-top:12px"><button id="signupBtn" class="primary">Create account</button><button id="loginBtn" class="secondary">Log in</button></div>
+<div id="authMessage" aria-live="polite"></div>
+</div>
+<div class="card" style="margin-top:14px">
+<h2 style="margin:0 0 5px">Share with Campusly</h2><p class="muted" id="composerHint">Log in to publish a post. Keep it kind and respectful.</p>
+<textarea id="postText" maxlength="3000" placeholder="What's happening on campus?"></textarea>
+<div class="row" style="margin-top:10px">
+<select id="postCategory" style="flex:1;min-width:130px"><option>General</option><option>Academics</option><option>Confessions</option><option>Spotted</option><option>Marketplace</option><option>Events</option></select>
+<label id="anonLabel" class="muted hidden"><input id="anonymous" type="checkbox"> Post anonymously</label>
+<button id="publishBtn" class="primary">Publish</button>
+</div>
+<div id="postMessage" aria-live="polite"></div>
+</div>
+<div class="row" style="justify-content:space-between;margin-top:20px"><div class="sectiontitle" id="feedTitle" style="margin:0">Latest posts</div><button id="refreshBtn" class="secondary">↻ Refresh</button></div>
+<div id="feed"><div class="card empty">Loading Campusly posts…</div></div>
+</section>
+</main>
+<footer>Campusly · Built for connection, respect and community.</footer>
+<script>
+(() => {
+  const SUPABASE_URL = 'https://zutvaadssgazmuyyybpu.supabase.co';
+  const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_99FYdKAMgJVTWAhlOlXPAg_HNGqtHPZ';
+  const $ = id => document.getElementById(id);
+  const say = (id, message, error=false) => { $(id).innerHTML = message ? `<div class="status ${error?'error':''}">${escapeHtml(message)}</div>` : ''; };
+  const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  let db, user = null, currentCategory = 'All', loadedPosts = [], likedIds = new Set();
+  try {
+    if (!window.supabase) throw new Error('Supabase client did not load. Check your internet connection and refresh.');
+    db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+  } catch(e) { say('postMessage', e.message, true); return; }
+  const setUser = async u => {
+    user = u;
+    $('authPanel').classList.toggle('hidden', !!u);
+    $('authToggle').textContent = u ? 'My account' : 'Log in / Sign up';
+    $('logoutBtn').classList.toggle('hidden', !u);
+    $('accountBox').classList.toggle('hidden', !u);
+    $('anonLabel').classList.toggle('hidden', !u || $('postCategory').value !== 'Confessions');
+    $('composerHint').textContent = u ? 'Your post will be saved to Campusly.' : 'Log in to publish a post. You can browse posts without an account.';
+    if (u) {
+      let {data:p} = await db.from('profiles').select('*').eq('id',u.id).maybeSingle();
+      $('welcome').textContent = p?.full_name ? `Welcome, ${p.full_name}!` : 'Welcome to Campusly!';
+      $('accountBox').textContent = u.email || 'You are logged in';
+      if (!p) {
+        const full = u.user_metadata?.full_name || '';
+        await db.from('profiles').upsert({id:u.id, full_name:full, username:u.user_metadata?.username || null, institution:u.user_metadata?.institution || null, faculty:u.user_metadata?.faculty || null, department:u.user_metadata?.department || null, level:u.user_metadata?.level || null},{onConflict:'id'});
+      }
+      const {data:likes} = await db.from('likes').select('post_id').eq('user_id',u.id);
+      likedIds = new Set((likes||[]).map(x=>x.post_id));
+    } else { $('welcome').textContent = 'Your campus, your people.'; $('accountBox').textContent=''; likedIds = new Set(); }
+    renderPosts();
+  };
+  $('authToggle').addEventListener('click',()=>{$('authPanel').classList.toggle('hidden'); if(!$('authPanel').classList.contains('hidden')) $('email').focus();});
+  $('signupBtn').addEventListener('click', async () => {
+    say('authMessage','');
+    const email=$('email').value.trim(), password=$('password').value;
+    if(!email || password.length<6) return say('authMessage','Enter a valid email and a password of at least 6 characters.',true);
+    const meta={full_name:$('fullName').value.trim(), username:$('username').value.trim()||null, institution:$('institution').value.trim()||null, faculty:$('faculty').value.trim()||null, department:$('department').value.trim()||null, level:$('level').value.trim()||null};
+    const {data,error}=await db.auth.signUp({email,password,options:{data:meta}});
+    if(error) return say('authMessage',error.message,true);
+    if(data.session) { await setUser(data.user); say('authMessage','Account created successfully!'); await loadPosts(); }
+    else say('authMessage','Account created. Check your email for a confirmation link, then return and log in.');
+  });
+  $('loginBtn').addEventListener('click',async()=>{
+    say('authMessage','');
+    const {data,error}=await db.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});
+    if(error) return say('authMessage',error.message,true);
+    await setUser(data.user); say('authMessage','You are logged in. Welcome back!'); await loadPosts();
+  });
+  $('logoutBtn').addEventListener('click',async()=>{await db.auth.signOut(); await setUser(null); say('authMessage','');});
+  $('postCategory').addEventListener('change',()=>{$('anonLabel').classList.toggle('hidden',!user||$('postCategory').value!=='Confessions');});
+  $('publishBtn').addEventListener('click',async()=>{
+    say('postMessage','');
+    if(!user){$('authPanel').classList.remove('hidden');return say('postMessage','Please log in or create an account before posting.',true);}
+    const content=$('postText').value.trim(), category=$('postCategory').value, is_anonymous=category==='Confessions' && $('anonymous').checked;
+    if(!content) return say('postMessage','Write something first.',true);
+    const {error}=await db.from('posts').insert({user_id:user.id,content,category,is_anonymous});
+    if(error) return say('postMessage','Could not publish: '+error.message,true);
+    $('postText').value=''; $('anonymous').checked=false; say('postMessage','Your post has been published.'); await loadPosts();
+  });
+  $('refreshBtn').addEventListener('click',loadPosts);
+  document.querySelectorAll('[data-category]').forEach(btn=>btn.addEventListener('click',()=>{
+    currentCategory=btn.dataset.category;
+    document.querySelectorAll('[data-category]').forEach(b=>b.classList.toggle('active',b===btn));
+    $('feedTitle').textContent=currentCategory==='All'?'Latest posts':currentCategory;
+    renderPosts();
+  }));
+  async function loadPosts(){
+    $('feed').innerHTML='<div class="card empty">Loading posts…</div>';
+    const {data,error}=await db.from('posts').select('id,user_id,content,category,is_anonymous,created_at').order('created_at',{ascending:false}).limit(100);
+    if(error){$('feed').innerHTML=`<div class="card empty">Could not load posts: ${escapeHtml(error.message)}<br><br>Check that the Supabase tables and read policies are set up.</div>`;return;}
+    loadedPosts=data||[];
+    const ids=[...new Set(loadedPosts.filter(p=>!p.is_anonymous).map(p=>p.user_id))];
+    let profiles={};
+    if(ids.length){const {data:ps}=await db.from('profiles').select('id,full_name,username,institution').in('id',ids);(ps||[]).forEach(p=>profiles[p.id]=p);}
+    loadedPosts=loadedPosts.map(p=>({...p,profile:profiles[p.user_id]}));
+    renderPosts();
+  }
+  function renderPosts(){
+    const posts=loadedPosts.filter(p=>currentCategory==='All'||p.category===currentCategory);
+    if(!posts.length){$('feed').innerHTML='<div class="card empty">No posts here yet. Be the first to start a conversation 💚</div>';return;}
+    $('feed').innerHTML=posts.map(p=>{
+      const name=p.is_anonymous?'Anonymous':(p.profile?.full_name||p.profile?.username||'Campusly member');
+      const initials=p.is_anonymous?'?':name.slice(0,1).toUpperCase();
+      const date=p.created_at?new Date(p.created_at).toLocaleString([], {dateStyle:'medium',timeStyle:'short'}):'Just now';
+      return `<article class="card post" data-post="${p.id}"><div class="posttop"><div class="who"><div class="avatar">${escapeHtml(initials)}</div><div><strong>${escapeHtml(name)}</strong><div class="muted">${escapeHtml(date)}${p.profile?.institution&&!p.is_anonymous?' · '+escapeHtml(p.profile.institution):''}</div></div></div><span class="category">${escapeHtml(p.category||'General')}</span></div><div class="postcontent">${escapeHtml(p.content)}</div><div class="postactions"><button class="likeBtn ${likedIds.has(p.id)?'liked':''}" data-id="${p.id}">${likedIds.has(p.id)?'♥':'♡'} Like</button><button class="commentToggle" data-id="${p.id}">💬 Comments</button>${user&&user.id===p.user_id?`<button class="deleteBtn" data-id="${p.id}">Delete</button>`:''}</div><div class="comments hidden" id="comments-${p.id}"><div class="muted">Loading comments…</div></div></article>`;
+    }).join('');
+    document.querySelectorAll('.likeBtn').forEach(b=>b.addEventListener('click',()=>toggleLike(b.dataset.id)));
+    document.querySelectorAll('.commentToggle').forEach(b=>b.addEventListener('click',()=>toggleComments(b.dataset.id)));
+    document.querySelectorAll('.deleteBtn').forEach(b=>b.addEventListener('click',()=>deletePost(b.dataset.id)));
+  }
+  async function toggleLike(id){
+    if(!user){$('authPanel').classList.remove('hidden');return say('postMessage','Log in to like posts.',true);}
+    if(likedIds.has(id)){const {error}=await db.from('likes').delete().eq('post_id',id).eq('user_id',user.id);if(error)return say('postMessage',error.message,true);likedIds.delete(id);}
+    else {const {error}=await db.from('likes').insert({post_id:id,user_id:user.id});if(error)return say('postMessage',error.message,true);likedIds.add(id);}
+    renderPosts();
+  }
+  async function toggleComments(id){
+    const box=$('comments-'+id);box.classList.toggle('hidden');
+    if(box.dataset.loaded==='1')return;
+    const {data,error}=await db.from('comments').select('id,user_id,content,created_at').eq('post_id',id).order('created_at',{ascending:true});
+    if(error){box.innerHTML=`<div class="muted">Could not load comments: ${escapeHtml(error.message)}</div>`;return;}
+    let html=(data||[]).map(c=>`<div class="comment"><strong>${c.user_id===user?.id?'You':'Campusly member'}</strong>: ${escapeHtml(c.content)}</div>`).join('');
+    box.innerHTML=html||'<div class="muted" style="padding:8px 0">No comments yet.</div>';
+    if(user) box.innerHTML+=`<div class="commentbox"><input id="comment-${id}" placeholder="Write a comment…" maxlength="1000"><button class="primary" id="send-${id}">Send</button></div>`;
+    else box.innerHTML+='<div class="muted" style="padding:8px 0">Log in to comment.</div>';
+    box.dataset.loaded='1';
+    const send=$('send-'+id);if(send)send.addEventListener('click',async()=>{const input=$('comment-'+id),content=input.value.trim();if(!content)return;const {error}=await db.from('comments').insert({post_id:id,user_id:user.id,content});if(error)return alert('Comment failed: '+error.message);box.dataset.loaded='0';await toggleComments(id);box.classList.remove('hidden');});
+  }
+  async function deletePost(id){if(!confirm('Delete this post?'))return;const {error}=await db.from('posts').delete().eq('id',id).eq('user_id',user.id);if(error)return say('postMessage','Could not delete: '+error.message,true);await loadPosts();}
+  db.auth.getSession().then(async({data})=>{await setUser(data.session?.user||null);await loadPosts();});
+  db.auth.onAuthStateChange((_event,session)=>{setUser(session?.user||null);});
+})();
+</script>
+</body>
+</html>
